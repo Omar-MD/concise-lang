@@ -1,0 +1,20 @@
+view "----------------Example Test Script 2-------------------".
+
+% Variable Declaration & Assignment
+x: 15. view x.         % Declare and assign an integer variable
+y: -5. view y.         % Declare and assign an integer variable
+
+% Arithmetic Operations
+view "Addition: ". view x ' y.
+view "Subtraction: ". view x _ y.
+view "Multiplication: ". view x ^ y.
+view "Division: ". view x ~ y.
+view "Modulus: ". view x / y.
+
+% Ternary { String OR Integer}
+view "Ternary Operations".
+view $(x = 15), 15 | 0.
+view $(y # 0), 1 | 0.
+view $(y = -5), -5 | 0.
+view $(x = -10), 1 | 0.
+

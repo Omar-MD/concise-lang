@@ -1,0 +1,94 @@
+			ConciseLang User Guide
+
+Note: Check ConciseLang_UseCases to see the language use cases.
+
+Ignores: 
+	- Spaces
+	- NewLine
+	- Carriage returns
+
+Comments:
+	% This is a single line comment
+	%% Multi-line comment %%
+	
+Statement Delimiter:       
+	- Symbol "."
+	- Logical & Arithmetic expressions do not end with a delimiter
+
+Numerical dataType:
+	- Integer only
+
+Variable Declaration AND/OR assignment:
+	- Variable names are the same as Java i.e. can begin with 
+	  {"$","_","@",lower case, upper case letters"}
+	  
+	- a:.		Declare a with value 0.
+	- a:5.		Assign a value 5.
+	or
+	- a:5.		Declare and assign 5 to variable a.
+	
+Arithmetic Operation:						Example
+	- Plus		(') 						5 ' 5.
+	- Minus		(_) 						5 _ 5.
+	- Multiply	(^) 						5 ^ 5.
+	- Divide	(~) 						5 ~ 5.
+	- Modulus	(/) 						5 / 5.
+
+Logical Operation:
+	- EQUAL		(=) 						5 = 5.
+	- NOT EQUAL	(#) 						5 # 4.
+
+Display(Print to console):
+	- view 	"Hello World!"					display "Hello World"
+	- view 	4 ' 8							display 12
+	- view	$(true), 1 | 0.					display 1
+	- view !$(false), "true" | "false".		display "false"
+
+Ternary Operators:
+	- Integer Ternary						$(true), 1 | 0.
+	$(Condition), Expression | Expression.	  
+	
+	- String Ternary, starts with !.		!$(true), "true" | "false".
+	!$(Condition), String | String.
+					
+Note:
+	1 - $(condition) "condition" can be any arithmetic, logical expression
+	
+	2 - When an arithmetic expression is given:
+		if the result > 0 condition is true. Otherwise its false.
+		
+	3 - logical Operators, "=" for EQUAL to, and "#" NOT EQUAL
+	
+	4 - Reserved keywords, true/TRUE and false/FALSE. 
+		Represented internally by integer 1 and 0 respectively
+	
+Limitations:
+
+	Statements
+	-	All statements must end with a  “.” Delimiter. 
+		Except boolean and arithmetic expressions.
+	
+	Variable
+	-	Can only declare & Assign Integers
+	-	Cannot handle doubles/floats, only Integers in the form 05, or 5
+		For example Syntax error if given double 33.33
+	
+	Arithmetic operations
+	-	Do not take brackets into account
+	
+	Logical Operations
+	-	No OR, and AND operators.
+	
+	Ternary
+	-	Only one statement can be executed in ternary expressions
+	-	Ternary can only handle and return Strings or Integers
+		Both expressions in ternary need to be the same type, either Integer 
+		or String.
+	
+	Character Literals
+	-	Single Characters are printed as String literal
+		Using double quotes as single quotes is reserved for addition operator. 
+		For Example. "c".
+	
+	Loops:
+	-	No Looping constructs

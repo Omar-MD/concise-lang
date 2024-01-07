@@ -1,0 +1,192 @@
+options
+{
+  static = false; 				// Allows multiple parser instances
+  DEBUG_PARSER = false;			// Enable for development
+  ERROR_REPORTING = false;		// Detailed syntax error reporting
+}
+
+PARSER_BEGIN(ConciseLang)
+package concise.lang;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class ConciseLang
+{
+  public static void main(String args []) throws ParseException
+  {
+    while (true)
+    {
+      ConciseLang parser = new ConciseLang(System.in);
+      try
+      {
+        parser.Start();
+      }
+      catch (ParseException e)
+      {
+        System.out.println("Syntax error: " +e.getMessage());
+        parser.ReInit(System.in);
+      }
+      catch (Error e)
+      {
+        System.out.println("Error: " + e.getMessage());
+        break;
+      }
+    }
+  }
+}
+
+PARSER_END(ConciseLang)
+
+SKIP :
+{
+  " "											
+| "\t"
+| "\n"
+| "\r"
+| < "%%" (~["%"])* "%%" >
+| < "%" (~["\n", "\r"])* ("\n" | "\r" | "\r\n") >
+}
+
+TOKEN : 
+{
+  < DELIMITER: "." >
+| < ASSIGN: ":">
+| < PLUS : "'" > 
+| < MINUS : "_" > 	
+| < MULTI : "^" > 	
+| < DIVIDE : "~" >
+| < MODULUS: "/" >
+| < EQUAL: "=">
+| < NOT_EQUAL: "#" >
+| < LCB: "(" >
+| < RCB: ")" >
+| < TERNARY: "$">
+| < STR: "!" >
+| < COND: ",">
+| < ELSE: "|">
+| < DISPLAY: "view" >
+| < TRUE: ("true"|"TRUE") >
+| < FALSE:	("false"|"FALSE") >
+| < INTEGER: ("-")?["0"-"9"] (["0"-"9"])* > 
+| < STRING_LITERAL: "\"" (~["\""])* "\"" >
+| < IDENTIFIER: (["a"-"z","A"-"Z", "_", "$", "@"])+(["a"-"z","A"-"Z","0"-"9"])*>
+}
+
+void Start() :
+{Map<String, Integer> varMap = new HashMap<>();}
+{
+	(	   	DeclareOrAssign(varMap)  
+	| 	Print(varMap)
+	| 	TernaryInt(varMap)
+	| 	TernaryStr(varMap)
+	)*
+	<EOF>
+}
+
+
+void DeclareOrAssign(Map<String, Integer> varMap) :
+{Token t; int varValue = 0;}
+{
+	t = <IDENTIFIER>
+	<ASSIGN>
+	(	varValue = TernaryInt(varMap)
+	| 	varValue = ArithExpr(varMap) 
+	)?								{ varMap.put(t.image,varValue);	}
+	<DELIMITER>
+}
+
+void Print(Map<String, Integer> varMap) :
+{Token t; int val = 0; String str;}
+{
+	<DISPLAY>
+	(	t = <STRING_LITERAL>
+		{
+		 	System.out.println(t.image.substring(1, t.image.length() - 1));
+		}
+	|	val = ArithExpr(varMap)		{ System.out.println(val); }
+	| 	val = TernaryInt(varMap) 	{ System.out.println(val); }
+	|	str = TernaryStr(varMap)
+		{
+		 	System.out.print(str.substring(1, str.length() - 1));
+		}
+	)
+	<DELIMITER>
+}
+
+String TernaryStr(Map<String, Integer> varMap):
+{ boolean cond = false; Token str1, str2;}
+{
+  	<STR>
+	<TERNARY>
+	<LCB> cond = BoolExpr(varMap) <RCB>
+	<COND>
+	str1 = <STRING_LITERAL>
+	<ELSE>
+	str2 = <STRING_LITERAL>
+	{ return (cond)? str1.image: str2.image; }
+}
+
+int TernaryInt(Map<String, Integer> varMap):
+{ boolean cond = false; int val1, val2;}
+{
+	<TERNARY>
+	<LCB> cond = BoolExpr(varMap) <RCB>
+	<COND>
+	val1 = ArithExpr(varMap)
+	<ELSE>
+	val2 = ArithExpr(varMap)
+	{ return (cond)? val1: val2; }
+}
+
+boolean BoolExpr(Map<String, Integer> varMap):
+{int a, b;}
+{
+	a = ArithExpr(varMap)
+	(	<EQUAL>	b = ArithExpr(varMap)  		{ return (a == b)? true: false;}
+	|	<NOT_EQUAL> b = ArithExpr(varMap) 	{ return (a != b)? true: false;}
+	)*	
+
+	{ return (a > 0)? true : false; }
+}
+
+int ArithExpr(Map<String, Integer> varMap):
+{int a, b;}
+{
+	a = ExprTerm(varMap)
+	
+	(	<PLUS>  b = ExprTerm(varMap) 	{ a +=b; }
+	|	<MINUS> b = ExprTerm(varMap) 	{ a -= b; } 
+	)*									{ return a; }
+}
+
+int ExprTerm(Map<String, Integer> varMap):
+{int a, b;}
+{
+	a = Operand(varMap)
+	
+	(	<MULTI>  b = Operand(varMap)	{ a *=b; }
+	|	<DIVIDE> b = Operand(varMap) 	{ a /= b; }
+	| 	<MODULUS> b = Operand(varMap) 	{ a %= b;} 
+	)*									{ return a; }
+}
+
+int Operand(Map<String, Integer> varMap):
+{Token t; int val = 0;}
+{
+  (	t = <IDENTIFIER>
+	{
+		if(varMap.containsKey(t.image)) { val =  varMap.get(t.image); }
+	}
+  |	val = Int()
+  | <TRUE> 	  		{ val = 1; }
+  | <FALSE> 		{ val = 0; }
+  )
+  					{ return val; }
+}
+
+int Int() :
+{Token t;}
+{
+	t = <INTEGER> 	{ return Integer.parseInt(t.image); }
+}

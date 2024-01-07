@@ -1,0 +1,85 @@
+% ConciseLang Testing
+
+% Variable declaration & Assignment ---------------------------------
+view "Variable declaration & Assignment".			
+
+a: 		1.		view a.			% lower case
+B: 		2.		view B.			% upper case
+cDeF:	3.		view cDeF.		% mix of lower and upper case
+dE5: 	4.		view dE5.		% mix of lower, upper and Number
+_e: 	5. 		view _e.		% start with "_" Symbol
+$F: 	6.		view $F.		% start with "$" Symbol
+@G: 	7. 		view @G.		% start with "@" Symbol
+
+
+
+% Integer Assignment ------------------------------------------------
+view "Positive and negative Integer assignment".	
+
+negInt: -1.	 	view negInt.	% Negative integers
+posInt: 55.		view posInt.	% Positive integers
+
+
+
+% Arithmetic Operations ---------------------------------------------
+view "Arithmetic operations".	
+
+a: 5.
+view "5 + 0". 	view 5 ' 0. 	% Add integers,	
+view "10 - 5". 	view 10 _ 5. 	% Minus	Integers
+view "10 * 5". 	view 10 ^ 5.	% Multiply integers
+view "10 / 2".	view 10 ~ 5.	% Divide integers
+view "10 % 5".	view 10 / 5.	% Modulus integers
+
+a: 5.
+view "a + 10". 	view a ' 10. 	% Add variables
+view "20 - a". 	view 20 _ a. 	% Minus	variables
+view "a + 5". 	view a ^ 5.		% Multiply variables
+view "a / 5". 	view a ~ 5.		% Divide variables
+view "a % 5". 	view a / 5.		% Modulus variables
+
+a: 5.
+view "a + a + a".	view a ' a ' a .  	% Multiple additions
+view "a - a - a".	view a _ 1 _ 5 .  	% Multiple subtraction
+view "a * a * 2".	view a ^ a ^ 2 .	% Multiple multiplication
+view "a / 2 / 5".	view a ~ 2 ~ 5. 	% Multiple division
+
+view "a * 5 + 100 - 50 / 10".	
+view a ^ 5 ' 100 _ 50 ~ 10. 			% Mix of operations
+
+
+
+
+% Ternary { String OR Integer} ---------------------------------------
+view "Ternary Operations".	
+
+view !$(true), "Hello" | "World!".		% String Ternary, displays "Hello"
+view !$(false), "Hello" | "World".		% String Ternary, displays "World"
+
+view $(1 = 0), 1 | 0.					% Integer Ternary, displays 0
+view $(1 = 1), 1 | 0.					% Integer Ternary, displays 1
+
+view $(1 # 0), 1 | 0.					% Integer Ternary, displays 1
+view $(1 # 1), 1 | 0.					% Integer Ternary, displays 0
+
+a: $(1 # 0), 1 | 0.		view a.			% Integer Ternary can be used in assign
+a: $(a = 1), a ^ 10 | 0.view a.			% Example use case, value of a = 10.
+
+
+
+
+% Display reserved keyword "view" --------------------------------------
+view "Display i.e. print to console".	
+
+a: 5.
+view "Hello".							% String Literal
+view "c".								% Single Characters
+view 1 ' 5 ' 5.							% Any arithmetic expression
+view a _ 5 ^ 2.						
+view $(a = 1), a ^ 10 | 0.				% Integer Ternary
+view !$(2 ^ 5), "Hello" | "world".		% String Ternary
+
+
+
+
+%----------------------------------------------------------------------

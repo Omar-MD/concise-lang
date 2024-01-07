@@ -1,0 +1,19 @@
+view "----------------Example Test Script 3-------------------".
+
+% Variable Declaration & Assignment
+num1: 8. view num1.        % Declare and assign an integer variable
+num2: 4. view num2.        % Declare and assign an integer variable
+
+% Arithmetic Operations
+view "Addition: ". view num1 ' num2.
+view "Subtraction: ". view num1 _ num2.
+view "Multiplication: ". view num1 ^ num2.
+view "Division: ". view num1 ~ num2.
+view "Modulus: ". view num1 / num2.
+
+% Ternary { String OR Integer}
+view "Ternary Operations".
+view !$(true), "It's true." | "It's false.".
+view !$(false), "It's true." | "It's false.".
+
+
